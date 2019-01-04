@@ -26,7 +26,7 @@ import yaml
 
 import time
 
-TEST_WORLD_NUM = 1
+TEST_WORLD_NUM = 2
 
 # Helper function to get surface normals
 def get_normals(cloud):
