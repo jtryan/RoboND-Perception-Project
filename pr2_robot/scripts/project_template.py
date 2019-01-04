@@ -169,7 +169,7 @@ def pcl_callback(pcl_msg):
 
     for index, pts_list in enumerate(cluster_indices):
         # Grab the points for the cluster from the extracted outliers (cloud_objects)
-        pcl_cluster = cloud_objects.extract(pts_list)
+        pcl_cluster = extracted_outliers.extract(pts_list)
         ros_cluster = pcl_to_ros(pcl_cluster)
 
         # Extract histogram features

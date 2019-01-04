@@ -24,13 +24,13 @@ def get_normals(cloud):
 if __name__ == '__main__':
     rospy.init_node('capture_node')
 
-    # models = [
+    # models = [\
     #     'biscuits',
     #     'soap',
     #     'soap2',
     # ]
     
-    # models = [
+    # models = [\
     #     'biscuits',
     #     'soap',
     #     'book',
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     #     'glue',
     # ]
 
-    models = [
+    models = [\
         'sticky_notes',
         'book',
         'snacks',
@@ -56,11 +56,11 @@ if __name__ == '__main__':
     for model_name in models:
         spawn_model(model_name)
 
-        for i in range(300):
+        for i in range(200):
             # make 200 attempts to get a valid a point cloud then give up
             sample_was_good = False
             try_count = 0
-            while not sample_was_good and try_count < 5:
+            while not sample_was_good and try_count < 200:
                 sample_cloud = capture_sample()
                 sample_cloud_arr = ros_to_pcl(sample_cloud).to_array()
 
