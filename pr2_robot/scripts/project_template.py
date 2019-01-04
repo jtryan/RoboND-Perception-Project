@@ -26,7 +26,7 @@ import yaml
 
 import time
 
-TEST_WORLD_NUM = 3
+TEST_WORLD_NUM = 1
 
 # Helper function to get surface normals
 def get_normals(cloud):
@@ -81,7 +81,7 @@ def pcl_callback(pcl_msg):
     filter_axis = 'z'
     passThrough.set_filter_field_name(filter_axis)
     axis_min = 0.6
-    axis_max = 0.85 # 0.85, 0.75
+    axis_max = 1.1
     passThrough.set_filter_limits(axis_min, axis_max)
     # Finally use the filter function to obtain the resultant point cloud. 
     cloud_filtered = passThrough.filter()
@@ -111,12 +111,12 @@ def pcl_callback(pcl_msg):
     inliers, coefficients = seg.segment()
 
     ### Extract inliers and outliers
-    cloud_table = cloud_filtered.extract(inliers, negative=False)
-    cloud_objects = cloud_filtered.extract(inliers, negative=True)
+    extracted_inliers = cloud_filtered.extract(inliers, negative=False)
+    extracted_outliers = cloud_filtered.extract(inliers, negative=True)
 
     ### Euclidean Clustering
     # Go from XYZRGB to RGB since to build the k-d tree we only needs spatial data
-    white_cloud = XYZRGB_to_XYZ(cloud_objects)
+    white_cloud = XYZRGB_to_XYZ(extracted_outliers)
     # Apply function to convert XYZRGB to XYZ
     tree = white_cloud.make_kdtree()
 
@@ -124,8 +124,8 @@ def pcl_callback(pcl_msg):
     ec = white_cloud.make_EuclideanClusterExtraction()
     # Set tolerances for distance threshold 
     # as well as minimum and maximum cluster size (in points)
-    ec.set_ClusterTolerance(0.02) # 0.02
-    ec.set_MinClusterSize(50) # 50
+    ec.set_ClusterTolerance(0.01) # 0.02
+    ec.set_MinClusterSize(100) # 50
     ec.set_MaxClusterSize(50000) # 50000
 
     # Search the k-d tree for clusters
@@ -150,8 +150,8 @@ def pcl_callback(pcl_msg):
     cluster_cloud.from_list(color_cluster_point_list)
 
     ### Convert PCL data to ROS messages
-    ros_cloud_objects = pcl_to_ros(cloud_objects) 
-    ros_cloud_table = pcl_to_ros(cloud_table)
+    ros_cloud_objects = pcl_to_ros(extracted_outliers) 
+    ros_cloud_table = pcl_to_ros(extracted_inliers)
     ros_cluster_cloud = pcl_to_ros(cluster_cloud)
 
     ### Publish ROS messages
@@ -195,7 +195,6 @@ def pcl_callback(pcl_msg):
         do.cloud = ros_cluster
         detected_objects.append(do)
 
-    time.sleep(60)
     # Publish the list of detected objects
     rospy.loginfo('Detected {} objects: {}'.format(len(detected_objects_labels), detected_objects_labels))
 
