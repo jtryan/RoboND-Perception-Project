@@ -26,7 +26,7 @@ import yaml
 
 import time
 
-TEST_WORLD_NUM = 3
+TEST_WORLD_NUM = 2
 
 # Helper function to get surface normals
 def get_normals(cloud):
@@ -124,7 +124,7 @@ def pcl_callback(pcl_msg):
     ec = white_cloud.make_EuclideanClusterExtraction()
     # Set tolerances for distance threshold 
     # as well as minimum and maximum cluster size (in points)
-    ec.set_ClusterTolerance(0.01) # 0.02
+    ec.set_ClusterTolerance(0.02) # 0.02
     ec.set_MinClusterSize(100) # 50
     ec.set_MaxClusterSize(50000) # 50000
 
