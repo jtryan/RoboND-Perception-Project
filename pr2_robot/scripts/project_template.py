@@ -26,7 +26,7 @@ import yaml
 
 import time
 
-TEST_WORLD_NUM = 2
+TEST_WORLD_NUM = 3
 
 # Helper function to get surface normals
 def get_normals(cloud):
@@ -346,7 +346,7 @@ if __name__ == '__main__':
     detected_objects_pub = rospy.Publisher("/detected_objects", DetectedObjectsArray, queue_size=1)
     
     # Load Model From disk
-    model = pickle.load(open('model_%s.sav' % TEST_WORLD_NUM, 'rb'))
+    model = pickle.load(open('model.sav', 'rb'))
     clf = model['classifier']
     encoder = LabelEncoder()
     encoder.classes_ = model['classes']

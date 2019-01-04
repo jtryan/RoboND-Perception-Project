@@ -14,8 +14,6 @@ from sensor_stick.srv import GetNormals
 from geometry_msgs.msg import Pose
 from sensor_msgs.msg import PointCloud2
 
-TEST_WORLD_NUM = 3
-
 def get_normals(cloud):
     get_normals_prox = rospy.ServiceProxy('/feature_extractor/get_normals', GetNormals)
     return get_normals_prox(cloud).cluster
@@ -23,14 +21,6 @@ def get_normals(cloud):
 
 if __name__ == '__main__':
     rospy.init_node('capture_node')
-
-    #models = [
-    #   'book',
-    #    'biscuits',
-    #    'soap2',
-    #    'soap',
-    #    'glue',
-    #]
 
     models = [
        'biscuits',
@@ -73,5 +63,4 @@ if __name__ == '__main__':
 
         delete_model()
 
-
-    pickle.dump(labeled_features, open('training_set_%s.sav' % TEST_WORLD_NUM, 'wb'))
+    pickle.dump(labeled_features, open('training_set.sav', 'wb'))
